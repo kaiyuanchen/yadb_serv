@@ -1,0 +1,12 @@
+include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+
+enable_testing()
+FILE(GLOB _ALL_FILES ${CMAKE_CURRENT_SOURCE_DIR}//*_test.cpp)
+FOREACH(_FILE ${_ALL_FILES})
+	get_filename_component(OUT_NAME ${_FILE} NAME_WE)
+	add_executable(${OUT_NAME} ${_FILE})
+	target_link_libraries(${OUT_NAME} ${GTEST_BOTH_LIBRARIES})
+	target_link_libraries(${OUT_NAME} ${CMAKE_THREAD_LIBS_INIT})
+	target_link_libraries(${OUT_NAME} serv_lib)
+	add_test(${OUT_NAME}m valgrind --leak-check=full --show-possibly-lost=no --show-reachable=no ./${OUT_NAME}) 
+ENDFOREACH()
